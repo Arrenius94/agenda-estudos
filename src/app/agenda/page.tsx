@@ -8,6 +8,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Image from 'next/image'
 import List from '../../image/lista-png.png'
 import Link from 'next/link'
+import { MyButton } from '../../components/button';
 
 export default function Agenda() {
     return (
@@ -38,10 +39,11 @@ export default function Agenda() {
                         placeholder='Digite para pesquisar'
                         type="text"
                     />
-                    <button className='bg-green-500 text-black px-4 py-2.5 rounded hover:bg-green-400 transition active:opacity-75 cursor-pointer flex items-center gap-1'>
+                    <MyButton color='green'><SearchIcon fontSize='small' /> Pesquisar</MyButton>
+                    {/* <button className='bg-green-500 text-black px-4 py-2.5 rounded hover:bg-green-400 transition active:opacity-75 cursor-pointer flex items-center gap-1'>
                         <SearchIcon fontSize='small' />
                         Pesquisar
-                    </button>
+                    </button> */}
                 </div>
             </div>
 

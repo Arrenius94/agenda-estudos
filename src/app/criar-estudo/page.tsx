@@ -5,6 +5,7 @@ import { InputFloatingTime } from '../../components/input-floating-time'
 import { InputFloatingDate } from '../../components/input-floating-date'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'
+import { MyButton } from '../../components/button'
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
@@ -47,7 +48,7 @@ export default function CriarEstudo() {
 
                     <InputFloatingTime
                         id="hora-tarde"
-                        label="Horas da Estudo"
+                        label="Horas de Estudo"
                         value={hour}
                         onChange={(e) => setHour(e.target.value)}
                     />
@@ -72,7 +73,7 @@ export default function CriarEstudo() {
                 </div>
 
                 <footer className="bg-zinc-200 text-white px-4 py-4 flex flex-wrap gap-4 p-2">
-                    <button
+                    {/* <button
                         type="submit"
                         className='bg-green-500 text-black ml-5 px-4 py-2.5 rounded hover:bg-green-400 transition active:opacity-75 cursor-pointer flex items-center gap-1'>
                         <ArrowUpwardIcon fontSize='small' />
@@ -84,7 +85,10 @@ export default function CriarEstudo() {
                         className='bg-red-500 text-black ml-5 px-4 py-2.5 rounded hover:bg-red-400 transition active:opacity-75 cursor-pointer flex items-center gap-1'>
                         <CancelIcon fontSize='small' />
                         Cancelar
-                    </button>
+                    </button> */}
+
+                    <MyButton className='ml-5' color='green' type="submit" abacate="abacatinho123" ><ArrowUpwardIcon fontSize='small' /> Salvar </MyButton>
+                    <MyButton className='ml-5' onClick={backList} color='red' type="button" abacate="abacatinho123" ><CancelIcon fontSize='small' /> Cancelar </MyButton>
                 </footer>
             </div>
         </div>
