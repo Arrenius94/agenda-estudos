@@ -9,8 +9,32 @@ import Image from 'next/image'
 import List from '../../image/lista-png.png'
 import Link from 'next/link'
 import { MyButton } from '../../components/button';
+import { MyInput } from '../../components/input';
+import { useState } from 'react';
 
 export default function Agenda() {
+    const [search, setSearch] = useState('');
+    const [annotation, setAnnotation] = useState(['']);
+    const notations = [
+        {
+            titulo: "Rins",
+            descricao: "Cirurgia rins",
+            dataConclusao: "15/04/2025",
+            horasEstudo: "4:00"
+        },
+        {
+            titulo: "Coração",
+            descricao: "Estudo de cardiologia",
+            dataConclusao: "20/04/2025",
+            horasEstudo: "3:30"
+        },
+        {
+            titulo: "Pulmão",
+            descricao: "Anatomia pulmonar",
+            dataConclusao: "25/04/2025",
+            horasEstudo: "2:45"
+        }
+    ];
     return (
         <div className="">
 
@@ -34,11 +58,20 @@ export default function Agenda() {
 
                 {/* Campo de busca */}
                 <div className='p-4 flex items-center gap-2'>
-                    <input
+                    {/* <input
                         className='border border-black rounded focus:border-green-500 text-sm p-3 w-full bg-white'
                         placeholder='Digite para pesquisar'
                         type="text"
-                    />
+                    /> */}
+                    <MyInput
+                        className='w-full'
+                        type='text'
+                        placeholder='Digite para pesquisar'
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    >
+                    </MyInput>
+
                     <MyButton color='green'><SearchIcon fontSize='small' /> Pesquisar</MyButton>
                     {/* <button className='bg-green-500 text-black px-4 py-2.5 rounded hover:bg-green-400 transition active:opacity-75 cursor-pointer flex items-center gap-1'>
                         <SearchIcon fontSize='small' />
@@ -72,25 +105,17 @@ export default function Agenda() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="border-b text-center">
-                                <td className="px-4 py-3 align-middle">Rins</td>
-                                <td className="px-4 py-3 align-middle">Cirurgia rins</td>
-                                <td className="px-4 py-3 align-middle">15/04/2025</td>
-                                <td className="px-4 py-3 align-middle">4:00</td>
-                                <td className="px-4 py-3 align-middle"><button><VisibilityIcon fontSize="large" className="text-blue-500 hover:text-blue-400 active:opacity-75 cursor-pointer" /></button></td>
-                                <td className="px-4 py-3 align-middle"><button><EditIcon fontSize="large" className="text-green-500 hover:text-green-400 transition active:opacity-75 cursor-pointer" /></button></td>
-                                <td className="px-4 py-3 align-middle"><button><DeleteForeverIcon fontSize="large" className="text-red-500 hover:text-red-400 transition active:opacity-75 cursor-pointer" /></button></td>
-                            </tr>
-
-                            <tr className="border-b text-center">
-                                <td className="px-4 py-3 align-middle">Rins</td>
-                                <td className="px-4 py-3 align-middle">Cirurgia Cabeça</td>
-                                <td className="px-4 py-3 align-middle">15/04/2025</td>
-                                <td className="px-4 py-3 align-middle">6:00</td>
-                                <td className="px-4 py-3 align-middle"><button><VisibilityIcon fontSize="large" className="text-blue-500" /></button></td>
-                                <td className="px-4 py-3 align-middle"><button><EditIcon fontSize="large" className="text-green-500" /></button></td>
-                                <td className="px-4 py-3 align-middle"><button><DeleteForeverIcon fontSize="large" className="text-red-500" /></button></td>
-                            </tr>
+                            {notations.map((nota, index) => (
+                                <tr key={index} className="border-b text-center">
+                                    <td className="px-4 py-3 align-middle">{nota.titulo}</td>
+                                    <td className="px-4 py-3 align-middle">{nota.descricao} rins</td>
+                                    <td className="px-4 py-3 align-middle">{nota.dataConclusao}</td>
+                                    <td className="px-4 py-3 align-middle">{nota.horasEstudo}</td>
+                                    <td className="px-4 py-3 align-middle"><button><VisibilityIcon fontSize="large" className="text-blue-500 hover:text-blue-400 active:opacity-75 cursor-pointer" /></button></td>
+                                    <td className="px-4 py-3 align-middle"><button><EditIcon fontSize="large" className="text-green-500 hover:text-green-400 transition active:opacity-75 cursor-pointer" /></button></td>
+                                    <td className="px-4 py-3 align-middle"><button><DeleteForeverIcon fontSize="large" className="text-red-500 hover:text-red-400 transition active:opacity-75 cursor-pointer" /></button></td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>

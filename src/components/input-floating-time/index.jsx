@@ -1,6 +1,6 @@
 "use-client";
 
-export function InputFloatingTime({ id = "input-time", label = "", value, onChange }) {
+export function InputFloatingTime({ id = "input-time", label = "", value, onChange, ...props }) {
   return (
     <div className="relative w-full max-w-[160px] mt-4">
       <input
@@ -8,6 +8,7 @@ export function InputFloatingTime({ id = "input-time", label = "", value, onChan
         id={id}
         value={value}
         onChange={onChange}
+        {...props}
         placeholder=" "
         className="peer h-12 w-full border border-black rounded px-2 pt-5 text-sm bg-white focus:outline-none focus:border-b-black"
       />

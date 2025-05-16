@@ -1,11 +1,12 @@
 import "./globals.css";
 import { Header } from '../components/header'
+import { rubik } from "./fonts";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`antialiased`}
+        className={rubik.className}
       >
         <Header />
         {children}
