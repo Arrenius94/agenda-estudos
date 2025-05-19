@@ -8,10 +8,13 @@ import { useRouter } from 'next/navigation'
 import { MyButton } from '../../components/button'
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { MyInput } from '../../components/input';
 
 export default function CriarEstudo() {
     const [hour, setHour] = useState('');
     const [date, setDate] = useState('');
+    const [title, setTitle] = useState ('');
+    const [description, setDescription] = useState ('');
     const [observation, setObservation] = useState('');
     const router = useRouter()
 
@@ -33,17 +36,34 @@ export default function CriarEstudo() {
 
                 {/*Campo de Cadastro*/}
                 <div className='flex flex-wrap gap-4 p-2'>
-                    <input
+
+                    <MyInput
+                    type='text'
+                    placeholder='Titulo *'
+                    value={title}
+                    onChange={(e)=> setTitle(e.target.value)}
+                    className='flex-1 min-w-[200px] max-w-[350px] mt-5 ml-6 mb-3 p-3 bg-white'
+                    />
+
+                    <MyInput
+                    type='text'
+                    placeholder='Descrição'
+                    value={description}
+                    onChange={(e)=> setDescription(e.target.value)}
+                    className='flex-1 min-w-[200px] max-w-[350px] mt-5 ml-1 mb-3 p-3 bg-white'
+                    />
+
+                    {/* <input
                         type="text"
                         className='flex-1 min-w-[200px] max-w-[350px] mt-5 ml-6 mb-3 p-3 border border-black rounded  text-sm w-full bg-white'
                         placeholder='Titulo *'
-                    />
+                    /> */}
 
-                    <input
+                    {/* <input
                         type="text"
                         className='flex-1 min-w-[200px] max-w-[350px] mt-5 ml-1 mb-3 border border-black rounded text-sm p-3 w-full bg-white'
                         placeholder='Descrição *'
-                    />
+                    /> */}
 
 
                     <InputFloatingTime
