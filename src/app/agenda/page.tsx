@@ -72,7 +72,7 @@ export default function Agenda() {
                     >
                     </MyInput>
 
-                    <MyButton color='green'><SearchIcon fontSize='small' /> Pesquisar</MyButton>
+                    <MyButton type color='green'><SearchIcon fontSize='small' /> Pesquisar</MyButton>
                     {/* <button className='bg-green-500 text-black px-4 py-2.5 rounded hover:bg-green-400 transition active:opacity-75 cursor-pointer flex items-center gap-1'>
                         <SearchIcon fontSize='small' />
                         Pesquisar

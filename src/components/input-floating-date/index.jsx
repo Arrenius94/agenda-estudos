@@ -1,6 +1,8 @@
-"use-client";
+import { cn } from "../../app/helpers/cn";
 
-export function InputFloatingDate({ id = "input-time", label = "", value, onChange, ...props }) {
+export function InputFloatingDate({ id = "input-time", label = "", className = "", value, onChange, ...props }) {
+  const defaultFloartingDate =
+    "peer h-12 w-full border border-black rounded px-2 pt-5 text-sm bg-white focus:outline-none focus:border-green-600";
   return (
     <div className="relative w-full max-w-[160px] mt-4">
       <input
@@ -10,7 +12,7 @@ export function InputFloatingDate({ id = "input-time", label = "", value, onChan
         onChange={onChange}
         {...props}
         placeholder=" "
-        className="peer h-12 w-full border border-black rounded px-2 pt-5 text-sm bg-white focus:outline-none focus:border-b-black"
+        className={cn(defaultFloartingDate, className)}
       />
       <label
         htmlFor={id}

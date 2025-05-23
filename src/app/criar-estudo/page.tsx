@@ -9,12 +9,13 @@ import { MyButton } from '../../components/button'
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { MyInput } from '../../components/input';
+import { MyTextArea } from '../../components/text-area'
 
 export default function CriarEstudo() {
     const [hour, setHour] = useState('');
     const [date, setDate] = useState('');
-    const [title, setTitle] = useState ('');
-    const [description, setDescription] = useState ('');
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
     const [observation, setObservation] = useState('');
     const router = useRouter()
 
@@ -38,19 +39,19 @@ export default function CriarEstudo() {
                 <div className='flex flex-wrap gap-4 p-2'>
 
                     <MyInput
-                    type='text'
-                    placeholder='Titulo *'
-                    value={title}
-                    onChange={(e)=> setTitle(e.target.value)}
-                    className='flex-1 min-w-[200px] max-w-[350px] mt-5 ml-6 mb-3 p-3 bg-white'
+                        type='text'
+                        placeholder='Titulo *'
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        className='flex-1 min-w-[200px] max-w-[350px] mt-5 ml-6 mb-3 p-3 bg-white'
                     />
 
                     <MyInput
-                    type='text'
-                    placeholder='Descrição'
-                    value={description}
-                    onChange={(e)=> setDescription(e.target.value)}
-                    className='flex-1 min-w-[200px] max-w-[350px] mt-5 ml-1 mb-3 p-3 bg-white'
+                        type='text'
+                        placeholder='Descrição'
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className='flex-1 min-w-[200px] max-w-[350px] mt-5 ml-1 mb-3 p-3 bg-white'
                     />
 
                     {/* <input
@@ -89,7 +90,13 @@ export default function CriarEstudo() {
                 </div>
 
                 <div className='p-2 ml-6'>
-                    <textarea rows={8} className='w-96  p-1.5 border border-black rounded' placeholder='OBSERVAÇÕES' name="" id=""></textarea>
+                    {/* <textarea rows={8} className='w-96  p-1.5 border border-black rounded' placeholder='OBSERVAÇÕES' name="" id=""></textarea> */}
+                    <MyTextArea
+                        value={observation}
+                        onChange={(e) => setObservation(e.target.value)}
+                        placeholder='OBSERVAÇÕES'
+                        rows={8}
+                    />
                 </div>
 
                 <footer className="bg-zinc-200 text-white px-4 py-4 flex flex-wrap gap-4 p-2">

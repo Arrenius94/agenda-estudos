@@ -7,7 +7,7 @@ import { cn } from "../../app/helpers/cn";
 //   return twMerge(clsx(inputs));
 // }
 
-export const MyButton = ({ children, color = "green", className = "", ...props }) => {
+export const MyButton = ({ children, type, color = "green", className = "", ...props }) => {
   console.log("props", props);
   const defaultButtonClass = "flex items-center px-4 py-2.5 text-md rounded-lg ";
   const colors = {
@@ -17,7 +17,7 @@ export const MyButton = ({ children, color = "green", className = "", ...props }
   };
 
   return (
-    <button className={cn(defaultButtonClass, colors[color], className)} {...props}>
+    <button className={cn(defaultButtonClass, colors[color], className)} {...props} type={type}>
       {children}
     </button>
   );
