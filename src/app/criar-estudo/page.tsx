@@ -11,7 +11,7 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { MyInput } from '../../components/input';
 import { MyTextArea } from '../../components/text-area'
 
-export default function CriarEstudo() {
+export default function CeateStudy() {
     const [hour, setHour] = useState('');
     const [date, setDate] = useState('');
     const [title, setTitle] = useState('');
@@ -114,8 +114,8 @@ export default function CriarEstudo() {
                         Cancelar
                     </button> */}
 
-                    <MyButton className='ml-5' color='green' type="submit" abacate="abacatinho123" ><ArrowUpwardIcon fontSize='small' /> Salvar </MyButton>
-                    <MyButton className='ml-5' onClick={backList} color='red' type="button" abacate="abacatinho123" ><CancelIcon fontSize='small' /> Cancelar </MyButton>
+                    <MyButton className='ml-5' color='green' type="submit"><ArrowUpwardIcon fontSize='small' /> Salvar </MyButton>
+                    <MyButton className='ml-5' onClick={backList} color='red' type="button"><CancelIcon fontSize='small' /> Cancelar </MyButton>
                 </footer>
             </div>
         </div>

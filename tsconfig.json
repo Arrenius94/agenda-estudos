@@ -19,6 +19,13 @@
       }
     ]
   },
-  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx", "src/components/input/index.jsx"],
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/components/input/index.jsx",
+    "src/app/agenda/page.jsx"
+  ],
   "exclude": ["node_modules"]
 }
