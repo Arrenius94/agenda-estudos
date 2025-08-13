@@ -11,67 +11,75 @@ import Link from "next/link";
 import { MyButton } from "../../components/button";
 import { MyInput } from "../../components/input";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import { confirmDialog } from "../../components/messages/index";
 import api from "../../api/server";
+import { Pagination, Stack } from "@mui/material";
 
 export default function Agenda() {
   const [search, setSearch] = useState("");
-  const [termo, setTermo] = useState("");
   const [annotation, setAnnotation] = useState([]);
-  const notations = [
-    {
-      titulo: "Rins",
-      descricao: "Cirurgia rins",
-      dataConclusao: "15/04/2025",
-      horasEstudo: "4:00",
-    },
-    {
-      titulo: "Coração",
-      descricao: "Estudo de cardiologia",
-      dataConclusao: "20/04/2025",
-      horasEstudo: "3:30",
-    },
-    {
-      titulo: "Pulmão",
-      descricao: "Anatomia pulmonar",
-      dataConclusao: "25/04/2025",
-      horasEstudo: "2:45",
-    },
-  ];
+  const [amountAnnotation, setAmountAnnotation] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [termo, setTermo] = useState("");
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    if (!termo) {
-      getTasks();
+    if (!search) {
+      getTasks(null, 1);
     }
-  }, [termo]);
+  }, [search]);
 
-  const getTasks = async (e) => {
-    if (e !== undefined) {
-      e.preventDefault();
-    }
+  const getTasks = async (e, page = 1) => {
+    if (e?.preventDefault) e.preventDefault();
 
     try {
-      let formData = {
-        search: termo,
-      };
-
-      const response = await api.get(`/tarefas`, { params: formData });
-      console.log("GET", response.data);
-      // if (response.data) {
-      //   return;
-      // }
-      setAnnotation(response.data);
+      const response = await api.get(`/tarefas?user_id=${localStorage.getItem("id")}`, { params: { search, page } });
+      console.log("RESPONSE TAREFA", response.data);
+      setAnnotation(response.data.tarefas);
+      setCurrentPage(response.data.currentPage);
+      setTotalPages(response.data.totalPages);
+      setTermo(search);
+      console.log("Termo salvo:", search);
+      setAmountAnnotation(response.data.total);
     } catch (error) {
-      if (error.status == 401) {
-        alert("entrei");
+      console.error("Erro ao buscar tarefas", error);
+    }
+  };
+
+  const deletItem = async (e, id) => {
+    e.preventDefault();
+
+    const result = await confirmDialog();
+    if (result?.isConfirmed) {
+      try {
+        const response = await api.delete(`/tarefas/${id}`);
+        if (response.status === 204) {
+          Swal.fire({
+            title: "Excluído!",
+            text: "Seu arquivo foi excluído.",
+            icon: "success",
+          });
+
+          // Atualiza a lista após exclusão
+          getTasks(null, currentPage);
+        }
+      } catch (error) {
+        console.error("Erro ao deletar", error);
+        await Swal.fire({
+          title: "Erro!",
+          text: "Não foi possível excluir.",
+          icon: "error",
+        });
       }
     }
   };
 
-  console.log("Annotation:", annotation);
-
   const formatarDataBR = (dataISO) => {
-    const data = new Date(dataISO);
-    return data.toLocaleDateString("pt-BR");
+    if (!dataISO) return "";
+    // Pega só a parte da data (YYYY-MM-DD)
+    const [ano, mes, dia] = dataISO.split("T")[0].split("-");
+    return `${dia}/${mes}/${ano}`;
   };
 
   const formatarHorasParaRelogio = (horas) => {
@@ -80,22 +88,28 @@ export default function Agenda() {
     return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
   };
 
+  // Função para trocar página da paginação
+  const handleChangePage = (event, page) => {
+    setCurrentPage(page);
+    getTasks(null, page);
+  };
+
   return (
-    <div className="">
+    <div>
       {/* Título */}
       <div className="flex justify-center items-center mt-10">
-        <Image src={List} alt="Logo-MED" title="Logo-Med" width={45} height={30} />
-        <h1 className="ml-2 font-bold text-5xl">Anotações ☺</h1>
+        <Image className="" src={List} alt="Logo-MED" title="Logo-Med" width={45} height={30} />
+        <h1 className=" ml-2 font-bold text-3xl md:text-5xl">Anotações ☺</h1>
       </div>
 
       {/* Container principal */}
-      <div className="rounded-md shadow-md overflow-hidden mt-10 w-full max-w-[1250px] mx-auto">
+      <div className="max-w-96 mx-4 sm:max-w-[40rem] sm:mx-auto md:max-w-[48rem] lg:max-w-[1250px] xl:max-w-[100rem] mx-auto rounded-md mt-10 shadow-md overflow-hidden">
         {/* Cabeçalho */}
         <header className="bg-zinc-800 text-white px-4 py-4">
           <div className="flex items-center justify-between">
             <Link
               href="/criar-estudo"
-              className="p-3 bg-green-500 text-black px-4 py-2 rounded hover:bg-green-400 transition active:opacity-75 cursor-pointer flex items-center gap-2"
+              className="px-4 py-2 bg-green-500 text-black rounded hover:bg-green-400 transition active:opacity-75 cursor-pointer flex items-center gap-2"
             >
               <FormatListBulletedIcon fontSize="small" />
               Novo Estudo
@@ -105,31 +119,33 @@ export default function Agenda() {
 
         {/* Campo de busca */}
         <div className="p-4 flex items-center gap-2">
-          {/* <input
-                        className='border border-black rounded focus:border-green-500 text-sm p-3 w-full bg-white'
-                        placeholder='Digite para pesquisar'
-                        type="text"
-                    /> */}
           <MyInput
-            className="w-full"
+            className="w-[21rem] sm:w-full md:w-full lg:w-full xl:w-full"
             type="text"
             placeholder="Digite para pesquisar"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-          ></MyInput>
-
-          <MyButton type="submit" color="green">
+          />
+          <MyButton color="green" onClick={getTasks}>
             <SearchIcon fontSize="small" /> Pesquisar
           </MyButton>
-          {/* <button className='bg-green-500 text-black px-4 py-2.5 rounded hover:bg-green-400 transition active:opacity-75 cursor-pointer flex items-center gap-1'>
-                        <SearchIcon fontSize='small' />
-                        Pesquisar
-                    </button> */}
+        </div>
+
+        <div className="px-4 py-2 text-sm text-zinc-700">
+          {termo ? (
+            <>
+              Total de tarefas encontradas: <span className="font-semibold">{amountAnnotation}</span>
+            </>
+          ) : (
+            <>
+              Total de tarefas: <span className="font-semibold">{amountAnnotation}</span>
+            </>
+          )}
         </div>
       </div>
 
       {/* Tabela */}
-      <div className="rounded-md shadow-md overflow-hidden mt-6 w-full max-w-[1250px] mx-auto">
+      <div className="max-w-96 mx-4 sm:max-w-[40rem] sm:mx-auto md:max-w-[48rem] lg:max-w-[1250px] xl:max-w-[100rem] mx-auto shadow-md overflow-hidden bg-white mt-6">
         {/* Cabeçalho da tabela */}
         <div className="bg-zinc-800 text-white px-4 py-3 flex items-center gap-2">
           <span className="text-lg font-semibold flex items-center gap-2">
@@ -138,8 +154,8 @@ export default function Agenda() {
           </span>
         </div>
 
-        {/* Tabela */}
-        <div className="bg-white">
+        {/* Corpo da tabela */}
+        <div className="overflow-x-auto">
           <table className="min-w-full text-center border-collapse">
             <thead className="border-b">
               <tr>
@@ -153,43 +169,59 @@ export default function Agenda() {
               </tr>
             </thead>
             <tbody>
-              {annotation.map((nota, index) => {
-                console.log(`Nota ${index}:`, nota);
-                return (
-                  <tr key={index} className="border-b text-center">
-                    <td className="px-4 py-3 align-middle">{nota.titulo}</td>
-                    <td className="px-4 py-3 align-middle">{nota.descricao}</td>
-                    <td className="px-4 py-3 align-middle"> {formatarDataBR(nota.data_conclusao)}</td>
-                    <td className="px-4 py-3 align-middle">{formatarHorasParaRelogio(nota.horas_estudo)}</td>
-                    <td className="px-4 py-3 align-middle">
-                      <button>
+              {annotation.map((item, index) => (
+                <tr key={index} className="border-b text-center">
+                  <td className="px-4 py-3 align-middle">{item.titulo}</td>
+                  <td className="px-4 py-3 align-middle">{item.descricao}</td>
+                  <td className="px-4 py-3 align-middle">{formatarDataBR(item.data_conclusao)}</td>
+                  <td className="px-4 py-3 align-middle">{formatarHorasParaRelogio(item.horas_estudo)}</td>
+                  <td className="px-4 py-3 align-middle">
+                    <Link href={`/criar-estudo/?${item.id}&view`}>
+                      <MyButton color="transparent">
                         <VisibilityIcon
                           fontSize="large"
                           className="text-blue-500 hover:text-blue-400 active:opacity-75 cursor-pointer"
                         />
-                      </button>
-                    </td>
-                    <td className="px-4 py-3 align-middle">
-                      <button>
+                      </MyButton>
+                    </Link>
+                  </td>
+                  <td className="px-4 py-3 align-middle">
+                    <Link href={`/criar-estudo/?${item.id}&edit`}>
+                      <MyButton color="transparent">
                         <EditIcon
                           fontSize="large"
-                          className="text-green-500 hover:text-green-400 transition active:opacity-75 cursor-pointer"
+                          className="text-green-500 hover:text-green-400 transition active:opacity-75 cursor-pointer bg-transparent"
                         />
-                      </button>
-                    </td>
-                    <td className="px-4 py-3 align-middle">
-                      <button>
-                        <DeleteForeverIcon
-                          fontSize="large"
-                          className="text-red-500 hover:text-red-400 transition active:opacity-75 cursor-pointer"
-                        />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+                      </MyButton>
+                    </Link>
+                  </td>
+                  <td className="px-4 py-3 align-middle">
+                    <MyButton color="transparent" onClick={(e) => deletItem(e, item.id)}>
+                      <DeleteForeverIcon
+                        fontSize="large"
+                        color="transparent"
+                        className="text-red-500 hover:text-red-400 transition active:opacity-75 cursor-pointer bg-transparent"
+                      />
+                    </MyButton>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Paginação */}
+        <div className="flex justify-center my-6">
+          <Stack spacing={2} className="mt-6 flex justify-center">
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={(_, value) => getTasks(null, value)}
+              color="standard"
+              showFirstButton
+              showLastButton
+            />
+          </Stack>
         </div>
       </div>
     </div>

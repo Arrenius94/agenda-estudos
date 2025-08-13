@@ -25,7 +25,12 @@
     "**/*.ts",
     "**/*.tsx",
     "src/components/input/index.jsx",
-    "src/app/agenda/page.jsx"
+    "src/app/agenda/page.jsx",
+    "src/app/criar-estudo/page.jsx",
+    "src/app/page.jsx",
+    "src/app/layout.jsx",
+    "src/app/pagina-inicial/page.jsx",
+    "src/components/header/index.jsx"
   ],
   "exclude": ["node_modules"]
 }

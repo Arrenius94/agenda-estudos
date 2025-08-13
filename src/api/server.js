@@ -9,10 +9,11 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-  //   const token = getToken();
-  //   if (token) {
-  //     config.headers.Authorization = Bearer ${token}
-  //   }
+  const token = localStorage.getItem("token");
+  console.log("Token:", token);
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   config.headers.Accept = "application/json";
   //   config.headers["X-Customer"] = getIdTenancy();
   //   config.headers["X-School"] = getIdSchool();

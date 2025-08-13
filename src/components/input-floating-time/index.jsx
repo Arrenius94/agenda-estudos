@@ -1,23 +1,33 @@
 import { cn } from "../../app/helpers/cn";
 
-export function InputFloatingTime({ id = "input-time", label = "", value, className = "", onChange, ...props }) {
-  const defaultFloatingTime =
-    "peer h-12 w-full border border-black  rounded px-2 pt-5 text-sm bg-white focus:outline-none focus:border-green-600";
+export function InputFloatingTime({
+  id = "input-time",
+  disabled,
+  label = "",
+  value,
+  className = "",
+  onChange,
+  ...props
+}) {
+  const inputBaseClass =
+    "peer w-full border border-black rounded-md px-2 pt-5 pb-2 text-sm bg-white focus:outline-none focus:border-green-600";
+
+  const labelBaseClass =
+    "absolute -top-2 left-3 bg-white px-1 text-xs text-gray-600 transition-all peer-focus:text-green-600";
+
   return (
-    <div className="relative w-full max-w-[160px] mt-4">
+    <div className={cn("relative mt-5", className)}>
       <input
         type="time"
         id={id}
         value={value}
+        disabled={disabled}
         onChange={onChange}
-        {...props}
         placeholder=" "
-        className={cn(defaultFloatingTime, className)}
+        className={inputBaseClass}
+        {...props}
       />
-      <label
-        htmlFor={id}
-        className="absolute left-2 top-2 text-xs text-gray-600 bg-white px-1 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 transition-all"
-      >
+      <label htmlFor={id} className={labelBaseClass}>
         {label}
       </label>
     </div>

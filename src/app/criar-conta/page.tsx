@@ -8,26 +8,81 @@ import { MyButton } from "../../components/button"
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { useRouter } from 'next/navigation'
+import { MyPasswordInput } from "../../components/input-password"
+import Swal from "sweetalert2";
+import api from "../../api/server"
 
 export default function CreateLogin() {
-    const [name, setname] = useState('');
-    const [age, setAge] = useState('');
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    const [day, setDay] = useState('')
-    const [month, setMonth] = useState('')
-    const [year, setYear] = useState('')
     const router = useRouter()
-
     const backList = (e) => {
         e.preventDefault()
         router.push('/login')
     }
 
+    const createUser = async (e) => {
+        e.preventDefault();
+        const formData = {
+            nome: name,
+            email: email,
+            senha: password,
+        }
+
+        try {
+            const response = await api.post(`/users`, formData)
+            if (response.status === 201) {
+
+                await Swal.fire({
+                    title: "Criado!",
+                    text: "Sua conta foi criada!",
+                    icon: "success"
+                })
+
+                setName("");
+                setEmail("");
+                setPassword("");
+
+                router.push("/login")
+            }
+
+        } catch (error) {
+            await Swal.fire({
+                title: "Erro!",
+                text: "Erro ao criar conta. Tente novamente!",
+                icon: "error",
+            })
+
+            // Verifica se error é objeto vazio
+            const isEmptyObject = error && Object.keys(error).length === 0 && error.constructor === Object;
+            if (isEmptyObject) {
+                // Não loga para evitar erro do Next.js
+                await Swal.fire({
+                    title: "Erro!",
+                    text: "Erro ao criar tarefa. Tente novamente!",
+                    icon: "error",
+                });
+                return;
+            }
+            // Se tiver dados, mostra só mensagem para evitar erro do Next.js
+            const errorMessage = error?.response?.data?.message || error?.message || "Erro desconhecido ao criar tarefa.";
+            console.error("Erro ao criar tarefa:", errorMessage);
+            await Swal.fire({
+                title: "Erro!",
+                text: errorMessage,
+                icon: "error",
+            });
+            console.error("error");
+        }
+
+    }
+
     return (
         <>
             <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-900 to-green-300">
-                <div className="w-auto rounded-lg mb-40 bg-gray-200 p-6 shadow-lg">
+                <div className="w-[90vw] max-w-md mt-10 rounded-lg mb-40 bg-gray-200 p-4 sm:p-6 shadow-lg">
                     <div className="text-center">
                         <Image
                             width={200}
@@ -37,103 +92,46 @@ export default function CreateLogin() {
                             src={LogoConta}
                         />
                     </div>
-                    <h1 className="text-center text-2xl font-bold tracking-tight text-black">Crie Sua Conta! :)</h1>
+                    <h1 className="text-center text-xl sm:text-2xl font-bold tracking-tight text-black">Crie Sua Conta! :)</h1>
 
-                    <div className="mt-5 flex flex-row gap-2 justify-center">
+                    <div className="mt-5 flex flex-col gap-3">
                         <MyInput
-                            className="w-xs"
-                            placeholder='Email'
+                            disabled={''}
+                            className="rounded-md w-full"
+                            placeholder="Email"
                             type="text"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
-
-                    </div>
-
-                    <div className="mt-5 flex flex-row gap-2 justify-center">
                         <MyInput
-                            className="w-xs"
-                            placeholder='Nome'
+                            disabled={''}
+                            className="rounded-md w-full"
+                            placeholder="Nome"
                             type="text"
                             value={name}
-                            onChange={(e) => setname(e.target.value)}
+                            onChange={(e) => setName(e.target.value)}
                         />
-
-                        {/* <MyInput
-                            placeholder='Idade'
-                            type="number"
-                            value={age}
-                            onChange={(e) => setAge(e.target.value)}
-                        /> */}
+                        <MyPasswordInput
+                            className="rounded-md w-full"
+                            placeholder="Senha"
+                            value={password}
+                            required
+                            autoComplete="current-password"
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </div>
 
-                    <div className="mt-5">
-                        <label className="block mb-1">Data de Nascimento</label>
-
-                        <div className="flex flex-wrap gap-2">
-                            {/* Dia */}
-                            <select
-                                value={day}
-                                onChange={(e) => setDay(e.target.value)}
-                                className="border p-2 rounded w-24 border-black focus:border-green-600 text-sm  bg-white focus:outline-none"
-                            >
-                                <option value="">Dia</option>
-                                {[...Array(31)].map((_, i) => (
-                                    <option key={i + 1} value={i + 1}>
-                                        {i + 1}
-                                    </option>
-                                ))}
-                            </select>
-
-                            {/* Mês */}
-                            <select
-                                value={month}
-                                onChange={(e) => setMonth(e.target.value)}
-                                className="border p-2 rounded w-36 border-black focus:border-green-600 text-sm  bg-white focus:outline-none"
-                            >
-                                <option value="">Mês</option>
-                                {[
-                                    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-                                    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
-                                ].map((mes, index) => (
-                                    <option key={index + 1} value={index + 1}>
-                                        {mes}
-                                    </option>
-                                ))}
-                            </select>
-
-                            {/* Ano */}
-                            <select
-                                value={year}
-                                onChange={(e) => setYear(e.target.value)}
-                                className="border p-2 rounded w-28 border-black focus:border-green-600 text-sm  bg-white focus:outline-none"
-                            >
-                                <option value="">Ano</option>
-                                {Array.from({ length: 100 }, (_, i) => {
-                                    const currentYear = new Date().getFullYear();
-                                    const yearOption = currentYear - i;
-                                    return (
-                                        <option key={yearOption} value={yearOption}>
-                                            {yearOption}
-                                        </option>
-                                    );
-                                })}
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <footer className="bg-zinc-500 text-white px-4 py-4 mt-6 rounded-md flex flex-wrap justify-between">
-                        <MyButton className="px-3 py-2 text-sm" color="green" type="submit">
+                    <footer className="bg-zinc-500 text-white px-4 py-4 mt-6 rounded-md flex flex-col sm:flex-row gap-3 justify-between">
+                        <MyButton disabled={''} className="w-full sm:w-auto px-3 py-2 text-sm" color="green" type="submit" onClick={createUser}>
                             <ArrowUpwardIcon fontSize="small" /> Salvar
                         </MyButton>
-
-                        <MyButton className='px-3 py-2 text-sm' onClick={backList} color='red' type="button">
-                            <CancelIcon fontSize='small' /> Cancelar
+                        <MyButton disabled={''} className="w-full sm:w-auto px-3 py-2 text-sm" onClick={backList} color="red" type="button">
+                            <CancelIcon fontSize="small" /> Cancelar
                         </MyButton>
                     </footer>
                 </div>
             </main>
+
         </>
     )
 }
