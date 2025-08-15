@@ -77,7 +77,6 @@ export default function Agenda() {
 
   const formatarDataBR = (dataISO) => {
     if (!dataISO) return "";
-    // Pega só a parte da data (YYYY-MM-DD)
     const [ano, mes, dia] = dataISO.split("T")[0].split("-");
     return `${dia}/${mes}/${ano}`;
   };
@@ -86,12 +85,6 @@ export default function Agenda() {
     const h = Math.floor(horas);
     const m = Math.round((horas - h) * 60);
     return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-  };
-
-  // Função para trocar página da paginação
-  const handleChangePage = (event, page) => {
-    setCurrentPage(page);
-    getTasks(null, page);
   };
 
   return (
@@ -168,7 +161,7 @@ export default function Agenda() {
                 <th className="px-4 py-2 font-semibold text-center">Excluir</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="ml-3">
               {annotation.map((item, index) => (
                 <tr key={index} className="border-b text-center">
                   <td className="px-4 py-3 align-middle">{item.titulo}</td>
@@ -176,33 +169,36 @@ export default function Agenda() {
                   <td className="px-4 py-3 align-middle">{formatarDataBR(item.data_conclusao)}</td>
                   <td className="px-4 py-3 align-middle">{formatarHorasParaRelogio(item.horas_estudo)}</td>
                   <td className="px-4 py-3 align-middle">
-                    <Link href={`/criar-estudo/?${item.id}&view`}>
-                      <MyButton color="transparent">
-                        <VisibilityIcon
-                          fontSize="large"
-                          className="text-blue-500 hover:text-blue-400 active:opacity-75 cursor-pointer"
-                        />
-                      </MyButton>
+                    <Link href={`/criar-estudo/?${item.id}&view`} className="">
+                      <VisibilityIcon
+                        fontSize="large"
+                        className="text-blue-500 hover:text-blue-400 active:opacity-75 cursor-pointer"
+                      />
                     </Link>
                   </td>
                   <td className="px-4 py-3 align-middle">
                     <Link href={`/criar-estudo/?${item.id}&edit`}>
-                      <MyButton color="transparent">
-                        <EditIcon
-                          fontSize="large"
-                          className="text-green-500 hover:text-green-400 transition active:opacity-75 cursor-pointer bg-transparent"
-                        />
-                      </MyButton>
+                      <EditIcon
+                        fontSize="large"
+                        className="text-green-500 hover:text-green-400 transition active:opacity-75 cursor-pointer bg-transparent"
+                      />
                     </Link>
                   </td>
                   <td className="px-4 py-3 align-middle">
-                    <MyButton color="transparent" onClick={(e) => deletItem(e, item.id)}>
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        deletItem(e, item.id);
+                      }}
+                      className="inline-block"
+                      title="Excluir"
+                    >
                       <DeleteForeverIcon
                         fontSize="large"
-                        color="transparent"
                         className="text-red-500 hover:text-red-400 transition active:opacity-75 cursor-pointer bg-transparent"
                       />
-                    </MyButton>
+                    </a>
                   </td>
                 </tr>
               ))}

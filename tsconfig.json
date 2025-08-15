@@ -30,7 +30,9 @@
     "src/app/page.jsx",
     "src/app/layout.jsx",
     "src/app/pagina-inicial/page.jsx",
-    "src/components/header/index.jsx"
+    "src/components/header/index.jsx",
+    "src/app/fonts.jsx",
+    "src/app/criar-conta/page.jsx"
   ],
   "exclude": ["node_modules"]
 }

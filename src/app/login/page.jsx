@@ -8,6 +8,7 @@ import { MyInput } from "../../components/input";
 import { MyPasswordInput } from "../../components/input-password";
 import { useState } from "react";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -33,14 +34,19 @@ export default function Login() {
       if (response.status === 200) {
         localStorage.setItem("id", response.data.user.id);
         localStorage.setItem("token", response.data.token);
+        console.log("responselogin", response);
         console.log("id", response.data.user.id);
-        window.location.href = "/agenda";
+        window.location.href = "/pagina-inicial";
       }
     } catch (error) {
       if (error.status == 401) {
-        alert("entrei");
+        Swal.fire({
+          icon: "error",
+          title: "Erro de login",
+          text: "E-mail ou senha incorretos!",
+        });
       }
-      console.log("Login bem-sucedido:", error);
+      console.log("Login mal-sucedido:", error);
     }
   };
 
@@ -93,7 +99,7 @@ export default function Login() {
                     className="block w-full rounded-md bg-black/5 px-3 py-1.5 text-base text-black outline outline-1 outline-white/10 placeholder:text-gray-500"
                     value={password}
                     required
-                    autoComplete="current-password"
+                    autocomplete="new-password"
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
