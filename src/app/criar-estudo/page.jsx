@@ -191,9 +191,11 @@ export default function CeateStudy() {
         router.push("/agenda");
       }
     } catch (error) {
+      console.log("error", error);
+      const messageBack = error.data?.error || "Erro em criar tarefa!";
       await Swal.fire({
         title: "Erro!",
-        text: "Erro ao criar tarefa. Tente novamente!",
+        text: messageBack,
         icon: "error",
       });
 
@@ -208,14 +210,6 @@ export default function CeateStudy() {
         });
         return;
       }
-      // Se tiver dados, mostra só mensagem para evitar erro do Next.js
-      const errorMessage = error?.response?.data?.message || error?.message || "Erro desconhecido ao criar tarefa.";
-      console.error("Erro ao criar tarefa:", errorMessage);
-      await Swal.fire({
-        title: "Erro!",
-        text: errorMessage,
-        icon: "error",
-      });
     }
   };
 

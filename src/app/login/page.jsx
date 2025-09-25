@@ -22,7 +22,7 @@ export default function Login() {
   };
 
   const login = async (e) => {
-    e.preventDefault(); // previne o reload do form
+    e.preventDefault();
     try {
       const response = await api.post("/login", {
         email,
@@ -95,11 +95,12 @@ export default function Login() {
                 </div>
                 <div className="mt-2">
                   <MyPasswordInput
-                    placeholder=""
+                    placeholder="Senha"
                     className="block w-full rounded-md bg-black/5 px-3 py-1.5 text-base text-black outline outline-1 outline-white/10 placeholder:text-gray-500"
                     value={password}
                     required
-                    autocomplete="new-password"
+                    name="user-password-new"
+                    autoComplete="new-password"
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>

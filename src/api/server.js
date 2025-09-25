@@ -1,10 +1,15 @@
 import axios from "axios";
 // import { getIdSchool, getIdTenancy, getToken, logout } from "./Auth";
 // const baseURL = process.env.REACT_APP_API_URL;
-const baseURL = "http://localhost:3000/api";
+let baseURL;
+
+if (window.location.hostname === "localhost") {
+  baseURL = "http://localhost:3000/api";
+} else {
+  baseURL = "https://back-end-agenda-estudos.onrender.com/api";
+}
 
 const api = axios.create({
-  // baseURL: (process.env.NODE_ENV === 'production' ? baseURLProd : baseURL)
   baseURL: baseURL,
 });
 

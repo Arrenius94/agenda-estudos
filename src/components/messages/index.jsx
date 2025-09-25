@@ -15,9 +15,9 @@ export const confirmDialog = () => {
     cancelButtonText: "Cancelar",
     customClass: {
       confirmButton:
-        "w-32 bg-red-500 text-black text-sm py-2 rounded hover:bg-red-400 transition active:opacity-75 focus:outline-none",
+        "w-32 bg-red-500 text-black text-sm py-2 rounded hover:bg-red-400 transition active:opacity-75 focus:outline-none cursor-pointer",
       cancelButton:
-        "w-32 bg-green-500 text-black text-sm py-2 rounded hover:bg-green-400 transition active:opacity-75 focus:outline-none ml-2",
+        "w-32 bg-green-500 text-black text-sm py-2 rounded hover:bg-green-400 transition active:opacity-75 focus:outline-none ml-2 cursor-pointer",
       title: "text-black",
       content: "text-black",
     },
