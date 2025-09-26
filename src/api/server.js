@@ -1,13 +1,7 @@
 import axios from "axios";
 // import { getIdSchool, getIdTenancy, getToken, logout } from "./Auth";
 // const baseURL = process.env.REACT_APP_API_URL;
-let baseURL;
-
-if (window.location.hostname === "localhost") {
-  baseURL = "http://localhost:3000/api";
-} else {
-  baseURL = "https://back-end-agenda-estudos.onrender.com/api";
-}
+const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
 
 const api = axios.create({
   baseURL: baseURL,
