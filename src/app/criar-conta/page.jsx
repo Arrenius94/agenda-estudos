@@ -52,15 +52,6 @@ export default function CreateLogin() {
         text: "Erro ao criar conta. Tente novamente!",
         icon: "error",
       });
-
-      // Se tiver dados, mostra só mensagem para evitar erro do Next.js
-      const errorMessage = error?.response?.data?.message || error?.message || "Erro desconhecido ao criar tarefa.";
-      console.error("Erro ao criar tarefa:", errorMessage);
-      await Swal.fire({
-        title: "Erro!",
-        text: errorMessage,
-        icon: "error",
-      });
       console.error("error");
     }
   };
