@@ -22,6 +22,7 @@ export default function CeateStudy() {
   const [observation, setObservation] = useState("");
   const [paramView, setParamView] = useState("");
   const [id, setId] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const backList = (e) => {
@@ -35,11 +36,8 @@ export default function CeateStudy() {
 
   const loadparam = () => {
     let param = location.search;
-    console.log("paraam", param);
     let removeMark = param.replace("?", "");
-    console.log("removeMark", removeMark);
     let format = removeMark.split("&");
-    console.log("format", format);
     setId(format[0]);
     setParamView(format[1]);
     if (format[1] === "view" || format[1] === "edit") {
@@ -56,14 +54,13 @@ export default function CeateStudy() {
     const float = parseFloat(value);
     const hours = Math.floor(float);
     const minutes = Math.round((float - hours) * 60);
-    console.log("função FORMATAR HORAS", minutes);
     const hh = String(hours).padStart(2, "0");
     const mm = String(minutes).padStart(2, "0");
-
     return `${hh}:${mm}`;
   };
 
   const updateAnnotation = async () => {
+    setLoading(true);
     let form = {
       titulo: title,
       descricao: description,
@@ -75,7 +72,6 @@ export default function CeateStudy() {
 
     try {
       const response = await api.put(`/tarefas/${id}`, form);
-      console.log("upadate tasks!", response.data);
       if (response.status === 200) {
         await Swal.fire({
           title: "Editado!",
@@ -87,35 +83,31 @@ export default function CeateStudy() {
         }, 1000);
       }
     } catch (error) {
-      // Verifica se error é objeto vazio
       const isEmptyObject = error && Object.keys(error).length === 0 && error.constructor === Object;
       if (isEmptyObject) {
-        // Não loga para evitar erro do Next.js
         await Swal.fire({
           title: "Erro!",
           text: "Erro ao criar tarefa. Tente novamente!",
           icon: "error",
         });
+        setLoading(false);
         return;
       }
-      // Se tiver dados, mostra só mensagem para evitar erro do Next.js
       const errorMessage = error?.response?.data?.message || error?.message || "Erro desconhecido ao criar tarefa.";
-      console.error("Erro ao criar tarefa:", errorMessage);
       await Swal.fire({
         title: "Erro!",
         text: errorMessage,
         icon: "error",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   const searchTask = async (id) => {
-    console.log("🔍 searchTask chamada com id:", id);
-
+    setLoading(true);
     try {
       const response = await api.get(`/tarefas/${id}`);
-      console.log("✅ Dados recebidos:", response.data);
-
       if (response.status === 200) {
         setTitle(response.data.titulo);
         setDescription(response.data.descricao);
@@ -124,36 +116,15 @@ export default function CeateStudy() {
         setObservation(response.data.observacoes);
       }
     } catch (error) {
-      console.error("❌ Erro ao buscar tarefa:", error?.response?.data || error.message || error);
+      // erro ao buscar tarefa
+    } finally {
+      setLoading(false);
     }
   };
 
   const onSignIn = async (e) => {
     e.preventDefault();
-
-    // if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    //   await Swal.fire({
-    //     title: "Data inválida!",
-    //     text: "Por favor, insira uma data válida.",
-    //     icon: "warning",
-    //   });
-    //   return;
-    // }
-
-    // const [ano, mes, dia] = date.split("-").map(Number);
-    // const dataSelecionada = new Date(ano, mes - 1, dia); // sem UTC
-    // const dataAtual = new Date();
-    // dataAtual.setHours(0, 0, 0, 0); // zera hora
-
-    // if (dataSelecionada.getTime() < dataAtual.getTime()) {
-    //   await Swal.fire({
-    //     title: "Data inválida!",
-    //     text: "A data de conclusão não pode ser menor que hoje.",
-    //     icon: "warning",
-    //   });
-    //   return;
-    // }
-
+    setLoading(true);
     const formData = {
       titulo: title,
       descricao: description,
@@ -164,7 +135,8 @@ export default function CeateStudy() {
     };
 
     if (paramView === "edit") {
-      updateAnnotation(formData);
+      await updateAnnotation(formData);
+      setLoading(false);
       return;
     }
 
@@ -172,10 +144,6 @@ export default function CeateStudy() {
       const response = await api.post(`/tarefas`, formData);
 
       if (response.status === 201) {
-        console.log("data", date);
-        console.log("Tarefa criada com sucesso!", response.data);
-
-        // alert("Tarefa criada com sucesso!");
         await Swal.fire({
           title: "Criado!",
           text: "Sua anotação foi criada.",
@@ -191,7 +159,6 @@ export default function CeateStudy() {
         router.push("/agenda");
       }
     } catch (error) {
-      console.log("error", error);
       const messageBack = error.data?.error || "Erro em criar tarefa!";
       await Swal.fire({
         title: "Erro!",
@@ -199,22 +166,28 @@ export default function CeateStudy() {
         icon: "error",
       });
 
-      // Verifica se error é objeto vazio
       const isEmptyObject = error && Object.keys(error).length === 0 && error.constructor === Object;
       if (isEmptyObject) {
-        // Não loga para evitar erro do Next.js
         await Swal.fire({
           title: "Erro!",
           text: "Erro ao criar tarefa. Tente novamente!",
           icon: "error",
         });
+        setLoading(false);
         return;
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div>
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-green-500 border-solid"></div>
+        </div>
+      )}
       <div className="max-w-96 mx-4 sm:max-w-[40rem] sm:mx-auto md:max-w-[48rem] lg:max-w-[1250px] xl:max-w-[100rem] rounded-md shadow-md overflow-hidden mt-10 w-full mx-auto">
         {/*Cabeçalho*/}
         <header className="bg-zinc-800 text-white px-4 py-4">

@@ -16,6 +16,7 @@ export default function CreateLogin() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
   const backList = (e) => {
@@ -25,6 +26,7 @@ export default function CreateLogin() {
 
   const createUser = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const formData = {
       nome: name,
       email: email,
@@ -53,11 +55,18 @@ export default function CreateLogin() {
         icon: "error",
       });
       console.error("error");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-green-500 border-solid"></div>
+        </div>
+      )}
       <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-900 to-green-300">
         <div className="w-[90vw] max-w-md mt-10 rounded-lg mb-40 bg-gray-200 p-4 sm:p-6 shadow-lg">
           <div className="text-center">

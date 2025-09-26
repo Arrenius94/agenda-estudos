@@ -23,6 +23,7 @@ export default function EditPerfil() {
   const { id } = useParams();
   const [oldPassword, SetOldPassword] = useState("");
   const [newPassword, SetNewPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
   const backList = (e) => {
@@ -32,30 +33,28 @@ export default function EditPerfil() {
 
   useEffect(() => {
     if (id) {
-      console.log("ID recebido:", id);
       viewUser(id);
     }
   }, [id]);
 
   const viewUser = async (id) => {
+    setLoading(true);
     try {
       const response = await api.get(`/users/${id}`);
       if (response.status === 200) {
-        console.log("RESPONSE USER", response.data);
         const user = response.data;
         setName(response.data.nome);
         setEditName(response.data.nome);
       }
     } catch (error) {
-      console.error(error);
-
       const isEmptyObject = error && Object.keys(error).length === 0 && error.constructor === Object;
       if (isEmptyObject) {
+        setLoading(false);
         return;
       }
       const errorMessage = error?.response?.data?.message || error?.message || "Erro desconhecido ao criar tarefa.";
-      console.error("Erro ao criar tarefa:", errorMessage);
-      console.error("error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,6 +62,7 @@ export default function EditPerfil() {
     e.preventDefault();
     const result = await confirmDialog();
     if (result?.isConfirmed) {
+      setLoading(true);
       try {
         const response = await api.delete(`/users/${id}`);
         if (response.status === 204) {
@@ -74,12 +74,14 @@ export default function EditPerfil() {
           router.push("/login");
         }
       } catch (error) {
-        console.error(error);
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   const changePassword = async () => {
+    setLoading(true);
     let form = {
       oldPassword: oldPassword,
       newPassword: newPassword,
@@ -97,18 +99,24 @@ export default function EditPerfil() {
         SetNewPassword("");
       }
     } catch (error) {
-      console.log("error", error);
       const messageBack = error.data?.error || "Erro em alterar senha!";
       Swal.fire({
         title: "Erro!",
         text: messageBack,
         icon: "error",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-green-500 border-solid"></div>
+        </div>
+      )}
       <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-white-900 to-white-300">
         <div className="w-[90vw] max-w-md mt-10 rounded-lg mb-40 bg-gray-200 p-4 sm:p-6 shadow-lg">
           <div className="text-center">
@@ -133,14 +141,6 @@ export default function EditPerfil() {
               autoComplete="current-password"
               onChange={(e) => SetNewPassword(e.target.value)}
             />
-            {/* <MyPasswordInput
-              className="rounded-md w-full"
-              placeholder="Senha"
-              value={password}
-              required
-              autoComplete="current-password"
-              onChange={(e) => setPassword(e.target.value)}
-            /> */}
           </div>
 
           <footer className="bg-zinc-500 text-white px-4 py-4 mt-6 rounded-md flex flex-col sm:flex-row gap-3 justify-between">

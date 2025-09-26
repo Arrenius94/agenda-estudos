@@ -15,6 +15,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
+  const [loading, setLoading] = useState(false); // estado para o spinner
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -23,19 +24,16 @@ export default function Login() {
 
   const login = async (e) => {
     e.preventDefault();
+    setLoading(true); // mostra o spinner
     try {
       const response = await api.post("/login", {
         email,
         senha: password,
       });
 
-      console.log("Login bem-sucedido:", response);
-
       if (response.status === 200) {
         localStorage.setItem("id", response.data.user.id);
         localStorage.setItem("token", response.data.token);
-        console.log("responselogin", response);
-        console.log("id", response.data.user.id);
         window.location.href = "/pagina-inicial";
       }
     } catch (error) {
@@ -46,12 +44,19 @@ export default function Login() {
           text: "E-mail ou senha incorretos!",
         });
       }
-      console.log("Login mal-sucedido:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-green-500 border-solid"></div>
+        </div>
+      )}
+
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-900 to-green-300">
         <div className="w-full max-w-md mx-4 sm:mx-auto rounded-lg mt-3 mb-3 bg-gray-200 p-6 shadow-lg">
           <div className="text-center">

@@ -23,27 +23,30 @@ export default function Agenda() {
   const [currentPage, setCurrentPage] = useState(1);
   const [termo, setTermo] = useState("");
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!search) {
       getTasks(null, 1);
     }
+    // eslint-disable-next-line
   }, [search]);
 
   const getTasks = async (e, page = 1) => {
     if (e?.preventDefault) e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await api.get(`/tarefas?user_id=${localStorage.getItem("id")}`, { params: { search, page } });
-      console.log("RESPONSE TAREFA", response.data);
       setAnnotation(response.data.tarefas);
       setCurrentPage(response.data.currentPage);
       setTotalPages(response.data.totalPages);
       setTermo(search);
-      console.log("Termo salvo:", search);
       setAmountAnnotation(response.data.total);
     } catch (error) {
       console.error("Erro ao buscar tarefas", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,6 +55,7 @@ export default function Agenda() {
 
     const result = await confirmDialog();
     if (result?.isConfirmed) {
+      setLoading(true);
       try {
         const response = await api.delete(`/tarefas/${id}`);
         if (response.status === 204) {
@@ -61,8 +65,7 @@ export default function Agenda() {
             icon: "success",
           });
 
-          // Atualiza a lista após exclusão
-          getTasks(null, currentPage);
+          await getTasks(null, currentPage);
         }
       } catch (error) {
         console.error("Erro ao deletar", error);
@@ -71,6 +74,8 @@ export default function Agenda() {
           text: "Não foi possível excluir.",
           icon: "error",
         });
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -89,6 +94,12 @@ export default function Agenda() {
 
   return (
     <div>
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-green-500 border-solid"></div>
+        </div>
+      )}
+
       {/* Título */}
       <div className="flex justify-center items-center mt-10">
         <Image className="" src={List} alt="Logo-MED" title="Logo-Med" width={45} height={30} />
