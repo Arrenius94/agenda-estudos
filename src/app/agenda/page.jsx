@@ -29,7 +29,6 @@ export default function Agenda() {
     if (!search) {
       getTasks(null, 1);
     }
-    // eslint-disable-next-line
   }, [search]);
 
   const getTasks = async (e, page = 1) => {
@@ -37,7 +36,10 @@ export default function Agenda() {
     setLoading(true);
 
     try {
-      const response = await api.get(`/tarefas?user_id=${localStorage.getItem("id")}`, { params: { search, page } });
+      const response = await api.get(
+        `/tarefas?user_id=${localStorage.getItem("id")}`,
+        { params: { search, page } }
+      );
       setAnnotation(response.data.tarefas);
       setCurrentPage(response.data.currentPage);
       setTotalPages(response.data.totalPages);
@@ -102,7 +104,14 @@ export default function Agenda() {
 
       {/* Título */}
       <div className="flex justify-center items-center mt-10">
-        <Image className="" src={List} alt="Logo-MED" title="Logo-Med" width={45} height={30} />
+        <Image
+          className=""
+          src={List}
+          alt="Logo-MED"
+          title="Logo-Med"
+          width={45}
+          height={30}
+        />
         <h1 className=" ml-2 font-bold text-3xl md:text-5xl">Anotações ☺</h1>
       </div>
 
@@ -138,11 +147,13 @@ export default function Agenda() {
         <div className="px-4 py-2 text-sm text-zinc-700">
           {termo ? (
             <>
-              Total de tarefas encontradas: <span className="font-semibold">{amountAnnotation}</span>
+              Total de tarefas encontradas:{" "}
+              <span className="font-semibold">{amountAnnotation}</span>
             </>
           ) : (
             <>
-              Total de tarefas: <span className="font-semibold">{amountAnnotation}</span>
+              Total de tarefas:{" "}
+              <span className="font-semibold">{amountAnnotation}</span>
             </>
           )}
         </div>
@@ -164,10 +175,18 @@ export default function Agenda() {
             <thead className="border-b">
               <tr>
                 <th className="px-4 py-2 font-semibold text-center">Título</th>
-                <th className="px-4 py-2 font-semibold text-center">Descrição</th>
-                <th className="px-4 py-2 font-semibold text-center">Data da Conclusão</th>
-                <th className="px-4 py-2 font-semibold text-center">Horas de Estudos</th>
-                <th className="px-4 py-2 font-semibold text-center">Visualizar</th>
+                <th className="px-4 py-2 font-semibold text-center">
+                  Descrição
+                </th>
+                <th className="px-4 py-2 font-semibold text-center">
+                  Data da Conclusão
+                </th>
+                <th className="px-4 py-2 font-semibold text-center">
+                  Horas de Estudos
+                </th>
+                <th className="px-4 py-2 font-semibold text-center">
+                  Visualizar
+                </th>
                 <th className="px-4 py-2 font-semibold text-center">Editar</th>
                 <th className="px-4 py-2 font-semibold text-center">Excluir</th>
               </tr>
@@ -177,8 +196,12 @@ export default function Agenda() {
                 <tr key={index} className="border-b text-center">
                   <td className="px-4 py-3 align-middle">{item.titulo}</td>
                   <td className="px-4 py-3 align-middle">{item.descricao}</td>
-                  <td className="px-4 py-3 align-middle">{formatarDataBR(item.data_conclusao)}</td>
-                  <td className="px-4 py-3 align-middle">{formatarHorasParaRelogio(item.horas_estudo)}</td>
+                  <td className="px-4 py-3 align-middle">
+                    {formatarDataBR(item.data_conclusao)}
+                  </td>
+                  <td className="px-4 py-3 align-middle">
+                    {formatarHorasParaRelogio(item.horas_estudo)}
+                  </td>
                   <td className="px-4 py-3 align-middle">
                     <Link href={`/criar-estudo/?${item.id}&view`} className="">
                       <VisibilityIcon

@@ -11,26 +11,36 @@ import { useRouter } from "next/navigation";
 import { MyPasswordInput } from "../../components/input-password";
 import Swal from "sweetalert2";
 import api from "../../api/server";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z
+  .object({
+    name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
+    email: z.string().min(1, "O email é obrigatório!").email("Email inválido!"),
+    password: z.string().min(1, "A senha é obrigatória!"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "As senhas não coincidem",
+    path: ["confirmPassword"],
+  });
 
 export default function CreateLogin() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
   const router = useRouter();
-  const backList = (e) => {
-    e.preventDefault();
-    router.push("/login");
-  };
 
-  const createUser = async (e) => {
-    e.preventDefault();
+  const { register, handleSubmit, reset } = useForm({
+    resolver: zodResolver(schema),
+  });
+
+  const createUser = async (data) => {
     setLoading(true);
     const formData = {
-      nome: name,
-      email: email,
-      senha: password,
+      nome: data.name,
+      email: data.email,
+      senha: data.password,
     };
 
     try {
@@ -41,11 +51,7 @@ export default function CreateLogin() {
           text: "Sua conta foi criada!",
           icon: "success",
         });
-
-        setName("");
-        setEmail("");
-        setPassword("");
-
+        reset();
         router.push("/login");
       }
     } catch (error) {
@@ -60,6 +66,22 @@ export default function CreateLogin() {
     }
   };
 
+  const onError = async (errors) => {
+    console.log(errors);
+    if (Object.keys(errors).length > 0) {
+      const err = Object.values(errors)[0];
+      await Swal.fire({
+        title: "Erro de validação",
+        text: err.message,
+        icon: "error",
+      });
+    }
+  };
+
+  const backList = (e) => {
+    e.preventDefault();
+    router.push("/login");
+  };
   return (
     <>
       {loading && (
@@ -70,57 +92,68 @@ export default function CreateLogin() {
       <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-900 to-green-300">
         <div className="w-[90vw] max-w-md mt-10 rounded-lg mb-40 bg-gray-200 p-4 sm:p-6 shadow-lg">
           <div className="text-center">
-            <Image width={200} height={160} alt="logo-criar-conta" className="mx-auto" src={LogoConta} />
-          </div>
-          <h1 className="text-center text-xl sm:text-2xl font-bold tracking-tight text-black">Crie Sua Conta! :)</h1>
-
-          <div className="mt-5 flex flex-col gap-3">
-            <MyInput
-              disabled={""}
-              className="rounded-md w-full"
-              placeholder="Email"
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+            <Image
+              width={200}
+              height={160}
+              alt="logo-criar-conta"
+              className="mx-auto"
+              src={LogoConta}
             />
+          </div>
+          <h1 className="text-center text-xl sm:text-2xl font-bold tracking-tight text-black">
+            Crie Sua Conta! :)
+          </h1>
+
+          <form
+            className="mt-5 flex flex-col gap-3"
+            onSubmit={handleSubmit(createUser, onError)}
+          >
             <MyInput
               disabled={""}
               className="rounded-md w-full"
               placeholder="Nome"
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              {...register("name")}
+            />
+            <MyInput
+              disabled={""}
+              className="rounded-md w-full"
+              placeholder="Email"
+              type="text"
+              {...register("email")}
             />
             <MyPasswordInput
               className="rounded-md w-full"
               placeholder="Senha"
-              value={password}
-              required
               autoComplete="current-password"
-              onChange={(e) => setPassword(e.target.value)}
+              {...register("password")}
             />
-          </div>
-
-          <footer className="bg-zinc-500 text-white px-4 py-4 mt-6 rounded-md flex flex-col sm:flex-row gap-3 justify-between">
-            <MyButton
-              disabled={""}
-              className="w-full sm:w-auto px-3 py-2 text-sm"
-              color="green"
-              type="submit"
-              onClick={createUser}
-            >
-              <ArrowUpwardIcon fontSize="small" /> Salvar
-            </MyButton>
-            <MyButton
-              disabled={""}
-              className="w-full sm:w-auto px-3 py-2 text-sm"
-              onClick={backList}
-              color="red"
-              type="button"
-            >
-              <CancelIcon fontSize="small" /> Cancelar
-            </MyButton>
-          </footer>
+            <MyPasswordInput
+              className="rounded-md w-full"
+              placeholder="Confirme a Senha"
+              {...register("confirmPassword")}
+              autoComplete="current-password"
+            />
+            <footer className="bg-zinc-500 text-white px-4 py-4 mt-6 rounded-md flex flex-col sm:flex-row gap-3 justify-between">
+              <MyButton
+                disabled={""}
+                className="w-full sm:w-auto px-3 py-2 text-sm"
+                color="green"
+                type="submit"
+              >
+                <ArrowUpwardIcon fontSize="small" /> Salvar
+              </MyButton>
+              <MyButton
+                disabled={""}
+                className="w-full sm:w-auto px-3 py-2 text-sm"
+                onClick={backList}
+                color="red"
+                type="button"
+              >
+                <CancelIcon fontSize="small" /> Cancelar
+              </MyButton>
+            </footer>
+          </form>
         </div>
       </main>
     </>

@@ -15,7 +15,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
-  const [loading, setLoading] = useState(false); // estado para o spinner
+  const [loading, setLoading] = useState(false);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -24,7 +24,7 @@ export default function Login() {
 
   const login = async (e) => {
     e.preventDefault();
-    setLoading(true); // mostra o spinner
+    setLoading(true);
     try {
       const response = await api.post("/login", {
         email,
@@ -60,14 +60,23 @@ export default function Login() {
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-900 to-green-300">
         <div className="w-full max-w-md mx-4 sm:mx-auto rounded-lg mt-3 mb-3 bg-gray-200 p-6 shadow-lg">
           <div className="text-center">
-            <Image className="mx-auto w-52 h-36 md:w-72 h-60" alt="Logo Zapido" src={Logo} />
-            <h2 className="mt-10 text-2xl font-bold tracking-tight text-black">Faça login da sua conta</h2>
+            <Image
+              className="mx-auto w-52 h-36 md:w-72 h-60"
+              alt="Logo Zapido"
+              src={Logo}
+            />
+            <h2 className="mt-10 text-2xl font-bold tracking-tight text-black">
+              Faça login da sua conta
+            </h2>
           </div>
 
           <div className="mt-10">
             <form action="#" method="POST" className="space-y-6">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-black">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-black"
+                >
                   Email
                 </label>
                 <div className="mt-2">
@@ -85,7 +94,10 @@ export default function Login() {
 
               <div>
                 <div className="flex items-center justify-between">
-                  <label htmlFor="password" className="block text-sm font-medium text-black">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-black"
+                  >
                     Senha
                   </label>
                   <div className="text-sm">
@@ -124,7 +136,10 @@ export default function Login() {
 
             <p className="mt-10 text-center text-sm text-gray-600">
               Não é membro?{" "}
-              <Link href="/criar-conta" className="font-semibold text-green-500 hover:text-green-400">
+              <Link
+                href="/criar-conta"
+                className="font-semibold text-green-500 hover:text-green-400"
+              >
                 Crie sua conta
               </Link>
             </p>
@@ -141,8 +156,13 @@ export default function Login() {
               className="bg-white rounded-lg p-6 w-full max-w-sm shadow-lg relative"
               onClick={(e) => e.stopPropagation()}
             >
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Recuperar senha</h3>
-              <label htmlFor="reset-email" className="block text-sm text-gray-700 mb-2">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                Recuperar senha
+              </h3>
+              <label
+                htmlFor="reset-email"
+                className="block text-sm text-gray-700 mb-2"
+              >
                 Digite seu e-mail
               </label>
 
@@ -167,7 +187,12 @@ export default function Login() {
                   Enviar
                 </MyButton>
 
-                <MyButton className="px-3 py-1.5" type="" onClick={closeModal} color="red">
+                <MyButton
+                  className="px-3 py-1.5"
+                  type=""
+                  onClick={closeModal}
+                  color="red"
+                >
                   Cancelar
                 </MyButton>
               </div>
