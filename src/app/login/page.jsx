@@ -49,6 +49,34 @@ export default function Login() {
     }
   };
 
+  const resetPassword = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const formData = {
+      email: resetEmail,
+    };
+    try {
+      const response = await api.post(`/reset-password`, formData);
+      if (response.status === 200) {
+        await Swal.fire({
+          title: "Enviado!",
+          text: "Sua nova senha foi enviada.",
+          icon: "success",
+        });
+        setResetEmail("");
+        closeModal();
+      }
+    } catch (error) {
+      await Swal.fire({
+        title: "Erro!",
+        text: "Erro ao enviar e-mail.",
+        icon: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       {loading && (
@@ -177,12 +205,9 @@ export default function Login() {
 
               <div className="flex justify-start gap-2">
                 <MyButton
-                  type=""
+                  type="button"
                   className="px-3 py-1.5"
-                  onClick={() => {
-                    console.log("Enviar recuperação para:", resetEmail);
-                    closeModal();
-                  }}
+                  onClick={(e) => resetPassword(e)}
                 >
                   Enviar
                 </MyButton>

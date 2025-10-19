@@ -39,6 +39,7 @@ export default function EditPerfil() {
 
   const viewUser = async (id) => {
     setLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 100));
     try {
       const response = await api.get(`/users/${id}`);
       if (response.status === 200) {
@@ -47,12 +48,18 @@ export default function EditPerfil() {
         setEditName(response.data.nome);
       }
     } catch (error) {
-      const isEmptyObject = error && Object.keys(error).length === 0 && error.constructor === Object;
+      const isEmptyObject =
+        error &&
+        Object.keys(error).length === 0 &&
+        error.constructor === Object;
       if (isEmptyObject) {
         setLoading(false);
         return;
       }
-      const errorMessage = error?.response?.data?.message || error?.message || "Erro desconhecido ao criar tarefa.";
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Erro desconhecido ao criar tarefa.";
     } finally {
       setLoading(false);
     }
@@ -120,9 +127,17 @@ export default function EditPerfil() {
       <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-white-900 to-white-300">
         <div className="w-[90vw] max-w-md mt-10 rounded-lg mb-40 bg-gray-200 p-4 sm:p-6 shadow-lg">
           <div className="text-center">
-            <Image width={300} height={260} alt="logo-criar-conta" className="mx-auto" src={LogoConta} />
+            <Image
+              width={300}
+              height={260}
+              alt="logo-criar-conta"
+              className="mx-auto"
+              src={LogoConta}
+            />
           </div>
-          <h1 className="text-center text-xl sm:text-2xl font-bold tracking-tight text-black">Olá {name} :)</h1>
+          <h1 className="text-center text-xl sm:text-2xl font-bold tracking-tight text-black">
+            Olá {name} :)
+          </h1>
 
           <div className="mt-5 flex flex-col gap-3">
             <MyPasswordInput
