@@ -17,12 +17,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const schema = z
   .object({
-    nome: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
+    name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
     email: z.string().min(1, "O email é obrigatório!").email("Email inválido!"),
-    senha: z.string().min(1, "A senha é obrigatória!"),
+    password: z.string().min(1, "A senha é obrigatória!"),
     confirmPassword: z.string(),
   })
-  .refine((data) => data.senha === data.confirmPassword, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "As senhas não coincidem",
     path: ["confirmPassword"],
   });
@@ -38,9 +38,9 @@ export default function CreateLogin() {
   const createUser = async (data) => {
     setLoading(true);
     const formData = {
-      nome: data.nome,
+      nome: data.name,
       email: data.email,
-      senha: data.senha,
+      senha: data.password,
     };
 
     try {
@@ -113,7 +113,7 @@ export default function CreateLogin() {
               className="rounded-md w-full"
               placeholder="Nome"
               type="text"
-              {...register("nome")}
+              {...register("name")}
             />
             <MyInput
               disabled={""}
@@ -126,7 +126,7 @@ export default function CreateLogin() {
               className="rounded-md w-full"
               placeholder="Senha"
               autoComplete="current-password"
-              {...register("senha")}
+              {...register("password")}
             />
             <MyPasswordInput
               className="rounded-md w-full"
