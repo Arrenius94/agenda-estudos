@@ -38,9 +38,9 @@ export default function CreateLogin() {
   const createUser = async (data) => {
     setLoading(true);
     const formData = {
-      nome: data.name,
+      nome: data.nome,
       email: data.email,
-      senha: data.password,
+      senha: data.senha,
     };
 
     try {
