@@ -17,12 +17,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const schema = z
   .object({
-    name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
+    nome: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
     email: z.string().min(1, "O email é obrigatório!").email("Email inválido!"),
-    password: z.string().min(1, "A senha é obrigatória!"),
+    senha: z.string().min(1, "A senha é obrigatória!"),
     confirmPassword: z.string(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.senha === data.confirmPassword, {
     message: "As senhas não coincidem",
     path: ["confirmPassword"],
   });
