@@ -113,7 +113,7 @@ export default function CreateLogin() {
               className="rounded-md w-full"
               placeholder="Nome"
               type="text"
-              {...register("name")}
+              {...register("nome")}
             />
             <MyInput
               disabled={""}
@@ -126,7 +126,7 @@ export default function CreateLogin() {
               className="rounded-md w-full"
               placeholder="Senha"
               autoComplete="current-password"
-              {...register("password")}
+              {...register("senha")}
             />
             <MyPasswordInput
               className="rounded-md w-full"
